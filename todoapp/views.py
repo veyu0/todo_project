@@ -1,4 +1,4 @@
-from rest_framework import status
+from rest_framework import status, viewsets, permissions
 from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.renderers import JSONRenderer
@@ -10,14 +10,16 @@ from todoapp.models import Project, ToDo
 from todoapp.serializers import ProjectSerializer, ToDoSerializer
 
 
-# class ProjectViewSet(ModelViewSet):
-#     queryset = Project.objects.all()
-#     serializer_class = ProjectSerializer
-#
-#
-# class ToDoViewSet(ModelViewSet):
-#     queryset = ToDo.objects.all()
-#     serializer_class = ToDoSerializer
+class ProjectViewSet(viewsets.ModelViewSet):
+    serializer_class = ProjectSerializer
+    queryset = Project.objects.all()
+
+
+class BookViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ToDoSerializer
+    queryset = ToDo.objects.all()
+
 
 class ProjectModelViewSet(ModelViewSet):
     queryset = Project.objects.all()
