@@ -15,7 +15,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
 
 
-class BookViewSet(viewsets.ModelViewSet):
+class ToDoViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ToDoSerializer
     queryset = ToDo.objects.all()
