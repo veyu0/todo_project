@@ -3,7 +3,7 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.renderers import JSONRenderer
 # from rest_framework.viewsets import ModelViewSet
 from users.models import User
-from users.serializers import UserModelSerializer
+from users.serializers import UserModelSerializer, UserModelSerializer_NEW
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -15,6 +15,11 @@ class UserListAPIView(ListAPIView):
     renderer_classes = [JSONRenderer]
     queryset = User.objects.all()
     serializer_class = UserModelSerializer
+
+    def get_serializer_class(self):
+        if self.request.version == '0.2':
+            return UserModelSerializer_NEW
+        return UserModelSerializer
 
 
 class UserRetrieveAPIView(RetrieveAPIView):
