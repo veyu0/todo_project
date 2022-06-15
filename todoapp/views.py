@@ -1,5 +1,8 @@
+from rest_framework import status
+from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from todoapp.filters import ProjectFilter, ToDoFilter
@@ -26,6 +29,13 @@ class ToDoModelViewSet(ModelViewSet):
     queryset = ToDo.objects.all()
     renderer_classes = [JSONRenderer]
     serializer_class = ToDoSerializer
+
+    def destroy(self, request, pk=None, *args, **kwargs):
+        queryset = get_object_or_404(ToDo, pk=pk)
+        queryset.is_active = False
+        queryset.save()
+        content = {'Статус изменен на неактивный'}
+        return Response(content, status=200)
 
 
 class ProjectCustomDjangoFilterViewSet(ModelViewSet):
