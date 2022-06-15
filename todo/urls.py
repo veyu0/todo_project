@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-
+from rest_framework.authtoken import views as view
 from todoapp.views import ProjectModelViewSet, ToDoModelViewSet, ToDoCustomDjangoFilterViewSet, \
     ProjectCustomDjangoFilterViewSet, ProjectLimitOffsetPaginatonViewSet, ToDoLimitOffsetPaginatonViewSet
 from users import views
@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include(router.urls)),
+    path('api-token-auth/', view.obtain_auth_token),
     #generic
     path('user/generic/list/', views.UserListAPIView.as_view()),
     path('user/generic/retrieve/<int:pk>/', views.UserRetrieveAPIView.as_view()),
