@@ -61,6 +61,44 @@ class App extends React.Component {
         return headers 
     }
 
+    createProject(name, users) {
+        const headers = this.get_headers()
+        const data = {name: name, users: users} 
+        axios.post(`http://127.0.0.1:8000/api/projects/`, data, {headers: headers})
+            .then(response => {
+                let new_project = response.data
+                const users = this.state.users.filter((item) => item.id === new_project.users)[0] 
+            new_project.users = users
+            this.setState({projects: [...this.state.projects, new_project]}) 
+        }).catch(error => console.log(error))}
+
+    createToDo(name, user) {
+        const headers = this.get_headers()
+        const data = {name: name, user: user} 
+        axios.post(`http://127.0.0.1:8000/api/todos/`, data, {headers: headers})
+            .then(response => {
+                let new_todo = response.data
+                const user = this.state.user.filter((item) => item.id === new_todo.user)[0] 
+            new_todo.user = user
+            this.setState({todos: [...this.state.todos, new_todo]}) 
+        }).catch(error => console.log(error))}
+
+    deleteProject(id) {
+        const headers = this.get_headers() 
+        axios.delete(`http://127.0.0.1:8000/api/projects/${id}`, {headers: headers})
+            .then(response => {
+                this.setState({books: this.state.projects.filter((item)=>item.id !== id)})
+        }).catch(error => console.log(error))
+    }
+
+    deleteToDo(id) {
+        const headers = this.get_headers() 
+        axios.delete(`http://127.0.0.1:8000/api/todos/${id}`, {headers: headers})
+            .then(response => {
+                this.setState({books: this.state.todos.filter((item)=>item.id !== id)})
+        }).catch(error => console.log(error))
+    }
+
     load_data() {
         const headers = this.get_headers()
         axios.get('http://127.0.0.1:8000/api/users/', {headers})
@@ -103,8 +141,10 @@ class App extends React.Component {
                     </nav>
                     <Switch>
                         <Route exact path='/users' component={() => <UserList items={this.state.users} />} />
-                        <Route exact path='/projects' component={() => <Project items={this.state.projects} />} />
-                        <Route exact path='/todos' component={() => <ToDo items={this.state.todos} />} />
+                        <Route exact path='/projects/create' component={() => <ProjectForm users={this.state.users} createProject={(name, users) => this.createProject(name, users)} />} />
+                        <Route exact path='/todos/create' component={() => <ToDoForm user={this.state.user} createToDo={(name, user) => this.createToDo(name, user)}/>} />
+                        <Route exact path='/projects' component={() => <Project items={this.state.projects} deleteProject={(id)=>this.deleteProject(id)}/>} />
+                        <Route exact path='/todos' component={() => <ToDo items={this.state.todos} deleteToDo={(id)=>this.deleteToDo(id)}/>} />
                         <Route exact path='/login' component={() => <LoginForm get_token={(username, password) => this.get_token(username, password)} />} />
                         <Redirect from='/users' to='/' />
                         <Route component={NotFound404} />
