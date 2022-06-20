@@ -9,9 +9,10 @@ const ToDoItem = ({item}) => {
             <td>{item.created}</td>
             <td>{item.updated}</td>
             <td>{item.active}</td>
+            <td><button onClick={()=>deleteToDo(item.id)} type='button'>Delete</button></td>
         </tr> )
 }
-const ToDo = ({items}) => {
+const ToDo = ({items, deleteToDo}) => {
     return (
         <table> 
             <tr>
@@ -22,7 +23,7 @@ const ToDo = ({items}) => {
                 <th>Updated</th>
                 <th>Active</th>
             </tr>
-            {items.map((item) => <ToDoItem item={item} />)}
+            {items.map((item) => <ToDoItem item={item} deleteToDo={deleteToDo}/>)}
         </table>
 ) }
 export default ToDo;
